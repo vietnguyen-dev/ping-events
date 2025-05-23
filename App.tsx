@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { onAuthStateChanged, User } from "firebase/auth";
-import Login from "./app/screens/login";
+import Login from "./app/screens/auth/login";
+import Signup from "./app/screens/auth/signup";
 import Home from "./app/screens/home";
 import Saved from "./app/screens/saved";
 import Settings from "./app/screens/settings";
@@ -54,11 +55,18 @@ export default function App() {
             options={{ headerShown: false }}
           />
         ) : (
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
+          <Fragment>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Signup"
+              component={Signup}
+              options={{ headerShown: false }}
+            />
+          </Fragment>
         )}
       </Stack.Navigator>
     </NavigationContainer>

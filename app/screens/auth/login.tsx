@@ -7,19 +7,18 @@ import {
   Button,
   KeyboardAvoidingView,
 } from "react-native";
-import { firebaseAuth } from "../../firebaseConfig";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { firebaseAuth } from "../../../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { ActivityIndicator } from "react-native";
-import Container from "../components/container";
+import { useNavigation } from "@react-navigation/native";
+import Container from "../../components/container";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const auth = firebaseAuth;
+  const navigation = useNavigation();
 
   const signIn = async () => {
     setLoading(true);
@@ -29,20 +28,6 @@ const Login = () => {
     } catch (err: any) {
       console.error(err);
       alert("Sign In Failed" + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUp = async () => {
-    setLoading(true);
-    try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(res);
-      alert("Check Email");
-    } catch (err: any) {
-      alert("Sign Up Failed" + err.message);
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -79,7 +64,10 @@ const Login = () => {
         ) : (
           <Fragment>
             <Button title="Sign In" onPress={signIn} />
-            <Button title="Sign Up" onPress={signUp} />
+            <Button
+              title="Create Account"
+              onPress={() => navigation.navigate("Signup" as never)}
+            />
           </Fragment>
         )}
       </KeyboardAvoidingView>
