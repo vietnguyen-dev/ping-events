@@ -55,7 +55,7 @@ const Signup = () => {
           <TextInput
             style={styles.input}
             value={password}
-            placeholder="Password"
+            placeholder="Passwod"
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
           />
