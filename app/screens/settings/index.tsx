@@ -1,5 +1,5 @@
 import { View, Text, Button, StyleSheet } from "react-native";
-import { firebaseAuth } from "../../firebaseConfig";
+import { firebaseAuth } from "../../../firebaseConfig";
 
 const Settings = () => {
   const auth = firebaseAuth;

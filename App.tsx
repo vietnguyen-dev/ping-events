@@ -7,7 +7,7 @@ import Login from "./app/screens/auth/login";
 import Signup from "./app/screens/auth/signup";
 import Home from "./app/screens/home";
 import Saved from "./app/screens/saved";
-import Settings from "./app/screens/settings";
+import Settings from "./app/screens/settings/index";
 import { firebaseAuth } from "./firebaseConfig";
 
 const Stack = createNativeStackNavigator();
