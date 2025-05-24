@@ -21,14 +21,11 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [endPingModalVisible, setEndPingModalVisible] = useState(false);
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
-  const [deletedModalVisible, setDeletedModalVisible] = useState(false);
   const [pingDescription, setPingDescription] = useState("");
   const [activePing, setActivePing] = useState(null);
   const [charCount, setCharCount] = useState(0);
-  const [focusedMarker, setFocusedMarker] = useState(false);
+  const [isMarkerFocused, setIsMarkerFocused] = useState(true);
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
   const MAX_CHARS = 140;
 
   useEffect(() => {
@@ -54,9 +51,8 @@ const Home = () => {
   }, []);
 
   const handleStartPing = () => {
-    console.log("Start ping pressed");
-    setFocusedMarker(false);
     setModalVisible(true);
+    setIsMarkerFocused(false);
   };
 
   const handleSubmitPing = () => {
@@ -72,19 +68,6 @@ const Home = () => {
       setModalVisible(false);
       setPingDescription("");
       setCharCount(0);
-      setFocusedMarker(false);
-      
-      // Hide callout if it's showing
-      if (markerRef.current && markerRef.current.hideCallout) {
-        markerRef.current.hideCallout();
-      }
-      
-      setSuccessModalVisible(true);
-      
-      // Auto-hide success message after 2 seconds
-      setTimeout(() => {
-        setSuccessModalVisible(false);
-      }, 2000);
     }
   };
 
@@ -95,19 +78,7 @@ const Home = () => {
   const handleEndPing = () => {
     setActivePing(null);
     setEndPingModalVisible(false);
-    setFocusedMarker(false);
-    
-    // Hide callout if it's showing
-    if (markerRef.current && markerRef.current.hideCallout) {
-      markerRef.current.hideCallout();
-    }
-    
-    setDeletedModalVisible(true);
-    
-    // Auto-hide delete message after 2 seconds
-    setTimeout(() => {
-      setDeletedModalVisible(false);
-    }, 2000);
+    setIsMarkerFocused(false);
   };
 
   const handleTextChange = (text) => {
@@ -135,21 +106,15 @@ const Home = () => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          onPress={() => {
-            // Hide callout when map is tapped
-            if (markerRef.current && markerRef.current.hideCallout) {
-              markerRef.current.hideCallout();
-              setFocusedMarker(false);
-            }
-          }}
         >
           <Marker
-            ref={markerRef}
             coordinate={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }}
+            tracksViewChanges={isMarkerFocused}
             onPress={() => {
+              setIsMarkerFocused(true);
               if (Platform.OS === 'ios') {
                 if (!activePing) {
                   handleStartPing();
@@ -157,21 +122,19 @@ const Home = () => {
                   handleEndPingRequest();
                 }
               }
-              setFocusedMarker(true);
             }}
           >
             <Callout 
               onPress={activePing ? handleEndPingRequest : handleStartPing}
-              tooltip={false}
+              tooltip={true}
               style={styles.callout}
             >
               <View style={styles.calloutContainer}>
                 {activePing ? (
                   <View style={styles.calloutInnerContainer}>
-                    <Text 
-                      style={styles.pingDescription} 
-                      adjustsFontSizeToFit={false}
-                    >{activePing.description}</Text>
+                    <Text style={styles.calloutTitle}>
+                      {activePing.description}
+                    </Text>
                     <View style={styles.calloutButton}>
                       <Text style={styles.calloutButtonText}>End Ping</Text>
                     </View>
@@ -191,18 +154,7 @@ const Home = () => {
 
         <TouchableOpacity 
           style={styles.floatingButton}
-          onPress={() => {
-            if (!activePing) {
-              handleStartPing();
-            } else {
-              handleEndPingRequest();
-            }
-            
-            // Hide callout when floating button is pressed
-            if (markerRef.current && markerRef.current.hideCallout) {
-              markerRef.current.hideCallout();
-            }
-          }}
+          onPress={!activePing ? handleStartPing : handleEndPingRequest}
         >
           <Text style={styles.floatingButtonText}>{!activePing ? "+" : "×"}</Text>
         </TouchableOpacity>
@@ -221,10 +173,7 @@ const Home = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-          setFocusedMarker(false);
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalOverlay}>
@@ -246,12 +195,6 @@ const Home = () => {
                     setModalVisible(false);
                     setPingDescription("");
                     setCharCount(0);
-                    setFocusedMarker(false);
-                    
-                    // Hide callout when cancel is pressed
-                    if (markerRef.current && markerRef.current.hideCallout) {
-                      markerRef.current.hideCallout();
-                    }
                   }}
                 >
                   <Text style={styles.buttonText}>Cancel</Text>
@@ -277,10 +220,7 @@ const Home = () => {
         animationType="slide"
         transparent={true}
         visible={endPingModalVisible}
-        onRequestClose={() => {
-          setEndPingModalVisible(false);
-          setFocusedMarker(false);
-        }}
+        onRequestClose={() => setEndPingModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -288,15 +228,7 @@ const Home = () => {
             <View style={styles.buttonContainer}>
               <TouchableOpacity 
                 style={styles.cancelButton} 
-                onPress={() => {
-                  setEndPingModalVisible(false);
-                  setFocusedMarker(false);
-                  
-                  // Hide callout when cancel is pressed
-                  if (markerRef.current && markerRef.current.hideCallout) {
-                    markerRef.current.hideCallout();
-                  }
-                }}
+                onPress={() => setEndPingModalVisible(false)}
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
@@ -307,32 +239,6 @@ const Home = () => {
                 <Text style={styles.buttonText}>Yes</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Success Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={successModalVisible}
-      >
-        <View style={styles.toastOverlay}>
-          <View style={styles.toastContent}>
-            <Text style={styles.toastText}>Ping Created!</Text>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Deleted Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={deletedModalVisible}
-      >
-        <View style={styles.toastOverlay}>
-          <View style={styles.toastContent}>
-            <Text style={styles.toastText}>Ping Deleted!</Text>
           </View>
         </View>
       </Modal>
@@ -355,32 +261,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   callout: {
-    width: 200,
+    backgroundColor: 'white',
+    borderRadius: 6,
   },
   calloutContainer: {
-    width: 200,
-    padding: 15,
+    minWidth: 150,
+    maxWidth: 250,
     backgroundColor: 'white',
     borderRadius: 6,
   },
   calloutInnerContainer: {
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
   },
   calloutTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
     textAlign: "center",
-    marginBottom: 10,
   },
   calloutButton: {
     backgroundColor: "#007AFF",
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 5,
-    marginTop: 10,
-    minWidth: 80,
+    marginTop: 5,
+    alignSelf: "center",
   },
   calloutButtonText: {
     color: "white",
@@ -389,9 +296,8 @@ const styles = StyleSheet.create({
   },
   pingDescription: {
     fontSize: 14,
-    textAlign: "center",
     marginBottom: 10,
-    width: '100%',
+    textAlign: "center",
   },
   modalOverlay: {
     flex: 1,
@@ -481,22 +387,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 30,
     fontWeight: 'bold',
-  },
-  toastOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  toastContent: {
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    borderRadius: 25,
-    padding: 15,
-    paddingHorizontal: 25,
-  },
-  toastText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 
