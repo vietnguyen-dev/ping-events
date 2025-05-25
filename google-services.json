@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "128779470899",
+    "project_id": "ping-events-2779b",
+    "storage_bucket": "ping-events-2779b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128779470899:android:69b15877c83cadfc23bb46",
+        "android_client_info": {
+          "package_name": "ping.events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128779470899-eprm2f3gkneb4d1mar1cus8c68g0146c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9Tu5_zdI_ZudFrVL-iOczww62PuNpkeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128779470899-eprm2f3gkneb4d1mar1cus8c68g0146c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

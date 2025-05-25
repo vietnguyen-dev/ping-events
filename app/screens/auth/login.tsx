@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
   View,
@@ -7,11 +7,16 @@ import {
   Button,
   KeyboardAvoidingView,
 } from "react-native";
-import { firebaseAuth } from "../../../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth, googleProvider } from "../../../firebaseConfig";
+import {
+  signInWithEmailAndPassword,
+  signInWithCredential,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Container from "../../components/container";
+import * as Google from "expo-auth-session/providers/google";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,6 +24,11 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const auth = firebaseAuth;
   const navigation = useNavigation();
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+    iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
+  });
 
   const signIn = async () => {
     setLoading(true);
@@ -68,6 +78,7 @@ const Login = () => {
               title="Create Account"
               onPress={() => navigation.navigate("Signup" as never)}
             />
+            <Button title="Google Sign In" onPress={() => promptAsync()} />
           </Fragment>
         )}
       </KeyboardAvoidingView>

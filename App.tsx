@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -37,6 +37,7 @@ function LoggedIn() {
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [initialRoute, setInitialRoute] = useState("Login");
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
@@ -47,7 +48,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" id={undefined}>
+      <Stack.Navigator initialRouteName={initialRoute} id={undefined}>
         {user ? (
           <Stack.Screen
             name="LoggedIn"
