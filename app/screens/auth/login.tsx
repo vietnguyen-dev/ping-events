@@ -17,7 +17,6 @@ import { ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Container from "../../components/container";
 import * as Google from "expo-auth-session/providers/google";
-
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

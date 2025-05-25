@@ -15,29 +15,17 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vietnguyendev.pingevents"
+      "bundleIdentifier": "com.vietnguyen-dev.ping-events"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "package": "com.vietnguyendev.pingevents"
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "842141c8-03f3-4ea3-8804-a02bc6d76f54"
-      }
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/842141c8-03f3-4ea3-8804-a02bc6d76f54"
     }
   }
 }
