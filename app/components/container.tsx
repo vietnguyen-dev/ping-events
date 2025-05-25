@@ -10,11 +10,9 @@ const Container: React.FC<iContainer> = ({ children }) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
     flex: 1, // Fills the entire screen
     justifyContent: "center", // Vertical centering
     backgroundColor: "#fff",
-    borderWidth: 1,
   },
 });
 
